@@ -9,30 +9,35 @@ document.addEventListener('DOMContentLoaded', () => {
 async function validarLogin(e) {
     e.preventDefault();
 
-    const email = document.querySelector('#email').value.trim();
-    const password = document.querySelector('#password').value.trim();
+    // Capturar valores (soporta IDs de input 'email' o 'usuario')
+    const usuarioInput = document.querySelector('#email') || document.querySelector('#usuario');
+    const passwordInput = document.querySelector('#password');
 
-    if (email === '' || password === '') {
+    const usuario = usuarioInput ? usuarioInput.value.trim() : '';
+    const password = passwordInput ? passwordInput.value.trim() : '';
+
+    if (usuario === '' || password === '') {
         mostrarAlerta('Todos los campos son obligatorios');
         return;
     }
 
     try {
-        // Apunta al endpoint de Flask definido en app.py
-        const url = 'apiejemplowilliamsrubio-production.up.railway.app';
+        // URL corregida con HTTPS y la ruta exacta /usuario/login
+        const url = 'https://apiejemplowilliamsrubio-production.up.railway.app/usuario/login';
 
         const respuesta = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ usuario, password })
         });
 
         const resultado = await respuesta.json();
 
-        if (!respuesta.ok) {
-            mostrarAlerta(resultado.error || 'Error al iniciar sesión');
+        // Validar si la respuesta no fue exitosa según el backend
+        if (!respuesta.ok || !resultado.exito) {
+            mostrarAlerta(resultado.mensaje || 'Error al iniciar sesión');
             return;
         }
 
@@ -57,7 +62,9 @@ function mostrarAlerta(mensaje) {
     alerta.textContent = mensaje;
 
     const formulario = document.querySelector('#formulario');
-    formulario.appendChild(alerta);
+    if (formulario) {
+        formulario.appendChild(alerta);
+    }
 
     setTimeout(() => {
         alerta.remove();
