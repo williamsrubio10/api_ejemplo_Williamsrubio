@@ -1,22 +1,20 @@
+import os
 from flask import Flask, jsonify, request
 from conexion import ConexionDB  
 import hashlib
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/*": {
-        "origins": ["http://localhost:5500", "http://127.0.0.1:5500"],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
 
-app.config['MYSQL_HOST'] = 'metro.proxy.rlwy.net'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'oWmOBAhHxEIgUWBxuYzIIeTTzsZuTYGb'
-app.config['MYSQL_DB'] = 'ventas'
-app.config['MYSQL_PORT'] = 49256
+# Permite peticiones desde cualquier origen (incluyendo Live Server)
+CORS(app)
+
+# Configuración mediante variables de entorno (Prioriza la red privada de Railway)
+app.config['MYSQL_HOST'] = os.getenv('MYSQLHOST', 'mysql.railway.internal')
+app.config['MYSQL_USER'] = os.getenv('MYSQLUSER', 'root')
+app.config['MYSQL_PASSWORD'] = os.getenv('MYSQLPASSWORD', 'oWmOBAhHxEIgUWBxuYzIIeTTzsZuTYGb')
+app.config['MYSQL_DB'] = os.getenv('MYSQLDATABASE', 'ventas')
+app.config['MYSQL_PORT'] = int(os.getenv('MYSQLPORT', 3306))
 
 db = ConexionDB(
     app.config['MYSQL_HOST'],
