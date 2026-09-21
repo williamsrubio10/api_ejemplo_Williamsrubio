@@ -1,17 +1,21 @@
-console.log('¡JS CARGADO CORRECTAMENTE!');
+
+console.log('¡jJS cargado correctamente!');
 
 document.addEventListener('DOMContentLoaded', () => {
     const formulario = document.querySelector('#formulario');
 
     if (formulario) {
         formulario.addEventListener('submit', validarLogin);
+    } else {
+        console.error('No se encontró el elemento #formulario');
     }
 });
 
 async function validarLogin(e) {
+    // Evita que el formulario recargue la página
     e.preventDefault();
+    console.log('Intento de submit capturado');
 
-    // ID exactamente como está en tu HTML: #usuario y #password
     const usuarioInput = document.querySelector('#usuario');
     const passwordInput = document.querySelector('#password');
 
@@ -25,6 +29,7 @@ async function validarLogin(e) {
 
     try {
         const url = 'https://apiejemplowilliamsrubio-production.up.railway.app/usuario/login';
+        console.log('Enviando datos a:', url);
 
         const respuesta = await fetch(url, {
             method: 'POST',
@@ -34,22 +39,23 @@ async function validarLogin(e) {
             body: JSON.stringify({ usuario, password })
         });
 
+        console.log('Estatus de la respuesta HTTP:', respuesta.status);
+
         const resultado = await respuesta.json();
+        console.log('Respuesta del servidor:', resultado);
 
         if (!respuesta.ok || !resultado.exito) {
             mostrarAlerta(resultado.mensaje || 'Error al iniciar sesión');
             return;
         }
 
-        // Guardar la información del usuario en el navegador
+        // Guardar sesión y redirigir
         localStorage.setItem('usuario', JSON.stringify(resultado.usuario));
-
-        // Redirigir a la vista principal
         window.location.href = 'index.html';
 
     } catch (error) {
-        console.error('Error de conexión:', error);
-        mostrarAlerta('No se pudo conectar con el servidor');
+        console.error('Error de red o conexión:', error);
+        mostrarAlerta('No se pudo conectar con el servidor. Revisa la consola.');
     }
 }
 
@@ -68,5 +74,5 @@ function mostrarAlerta(mensaje) {
 
     setTimeout(() => {
         alerta.remove();
-    }, 3000);
+    }, 4000);
 }
