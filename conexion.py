@@ -15,6 +15,7 @@ class ConexionDB:
                 host=self.host,
                 user=self.user,
                 password=self.password,
+                port=self.port,
                 db=self.db,
                 cursorclass=pymysql.cursors.Cursor
             )

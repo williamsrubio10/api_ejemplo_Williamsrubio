@@ -9,10 +9,10 @@ app = Flask(__name__)
 # Permite peticiones desde cualquier origen (incluyendo Live Server)
 CORS(app)
 
-app.config['MYSQL_HOST'] = os.getenv('MYSQLHOST', 'mysql.railway.internal')
-app.config['MYSQL_USER'] = os.getenv('MYSQLUSER', 'root')
-app.config['MYSQL_PASSWORD'] = os.getenv('MYSQLPASSWORD', 'oWmOBAhHxEIgUWBxuYzIIeTTzsZuTYGb')
-app.config['MYSQL_DB'] = os.getenv('MYSQLDATABASE', 'railway')  # <-- Base de datos oficial de Railway
+app.config['MYSQL_HOST'] = os.getenv('MYSQLHOST')
+app.config['MYSQL_USER'] = os.getenv('MYSQLUSER')
+app.config['MYSQL_PASSWORD'] = os.getenv('MYSQLPASSWORD')
+app.config['MYSQL_DB'] = os.getenv('MYSQLDATABASE')
 app.config['MYSQL_PORT'] = int(os.getenv('MYSQLPORT', 3306))
 
 db = ConexionDB(
