@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
 async function validarLogin(e) {
     e.preventDefault();
 
-    // Capturar valores (soporta IDs de input 'email' o 'usuario')
-    const usuarioInput = document.querySelector('#email') || document.querySelector('#usuario');
+    // ID exactamente como está en tu HTML: #usuario y #password
+    const usuarioInput = document.querySelector('#usuario');
     const passwordInput = document.querySelector('#password');
 
     const usuario = usuarioInput ? usuarioInput.value.trim() : '';
@@ -22,7 +22,6 @@ async function validarLogin(e) {
     }
 
     try {
-        // URL corregida con HTTPS y la ruta exacta /usuario/login
         const url = 'https://apiejemplowilliamsrubio-production.up.railway.app/usuario/login';
 
         const respuesta = await fetch(url, {
@@ -35,13 +34,12 @@ async function validarLogin(e) {
 
         const resultado = await respuesta.json();
 
-        // Validar si la respuesta no fue exitosa según el backend
         if (!respuesta.ok || !resultado.exito) {
             mostrarAlerta(resultado.mensaje || 'Error al iniciar sesión');
             return;
         }
 
-        // Guardar la información del usuario devuelta por el servidor
+        // Guardar la información del usuario en el navegador
         localStorage.setItem('usuario', JSON.stringify(resultado.usuario));
 
         // Redirigir a la vista principal
