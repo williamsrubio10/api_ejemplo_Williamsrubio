@@ -1,4 +1,4 @@
-const url = "http://127.0.0.1:5000/usuario";
+const url = "https://apiejemplowilliamsrubio-production.up.railway.app/usuario";
 
 export const nuevoCliente = async cliente => {
     try {
