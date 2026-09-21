@@ -127,37 +127,7 @@ def eliminar_usuario(id):
     except Exception as ex:
         return jsonify({'mensaje': "Error", 'exito': False})
     
-    
 @app.route('/usuario/login', methods=['POST'])
-def autenticar_usuario():
-    if (request.json['usuario'] and request.json['password']):
-        try:
-            cursor = db.obtener_cursor()
-            sql = "SELECT  idemp, usuario, clave FROM usuario WHERE usuario = '{0}'".format(request.json['usuario'])
-            cursor.execute(sql)
-            datos = cursor.fetchone()
-            if datos is None:
-                return jsonify({'mensaje': 'Usuario no encontrado', 'exito': False}), 404
-
-            clave_hash = hashlib.sha1(request.json['password'].encode('utf-8')).hexdigest()
-            if clave_hash == datos[2]:
-                return jsonify({
-                    'mensaje': 'Login exitoso',
-                    'exito': True,
-                    'usuario': {
-                        'idemp': datos[0],
-                        'usuario': datos[1],
-                    }
-                })
-            else:
-                return jsonify({'mensaje': 'Contraseña incorrecta', 'exito': False}), 401
-            
-        except Exception as ex:
-            return jsonify({'mensaje': ex, 'exito': False})
-    else:
-        return jsonify({'mensaje': "Parámetros inválidos...", 'exito': False})
-    
-@app.route('/login', methods=['POST'])
 def autenticar_usuario():
     datos = request.get_json(silent=True) or {}
     
