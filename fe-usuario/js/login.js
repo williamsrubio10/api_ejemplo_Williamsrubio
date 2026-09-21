@@ -19,7 +19,7 @@ async function validarLogin(e) {
 
     try {
         // Apunta al endpoint de Flask definido en app.py
-        const url = 'http://localhost:5000/login';
+        const url = 'apiejemplowilliamsrubio-production.up.railway.app';
 
         const respuesta = await fetch(url, {
             method: 'POST',
