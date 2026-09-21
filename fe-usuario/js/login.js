@@ -1,3 +1,5 @@
+console.log('¡JS CARGADO CORRECTAMENTE!');
+
 document.addEventListener('DOMContentLoaded', () => {
     const formulario = document.querySelector('#formulario');
 
