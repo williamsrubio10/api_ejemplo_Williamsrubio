@@ -156,3 +156,42 @@ def autenticar_usuario():
             return jsonify({'mensaje': ex, 'exito': False})
     else:
         return jsonify({'mensaje': "Parámetros inválidos...", 'exito': False})
+    
+@app.route('/login', methods=['POST'])
+def autenticar_usuario():
+    datos = request.get_json(silent=True) or {}
+    
+    # Soporta tanto 'usuario' como 'email' enviados desde el frontend
+    usuario_input = datos.get('usuario') or datos.get('email')
+    password_input = datos.get('password') or datos.get('clave')
+
+    if not usuario_input or not password_input:
+        return jsonify({'mensaje': "Parámetros inválidos. Se requiere usuario y contraseña.", 'exito': False}), 400
+
+    try:
+        cursor = db.obtener_cursor()
+        # Uso de consultas parametrizadas para evitar inyecciones SQL
+        sql = "SELECT idemp, usuario, clave FROM usuario WHERE usuario = %s AND estado = 1"
+        cursor.execute(sql, (usuario_input,))
+        usuario_db = cursor.fetchone()
+        cursor.close()
+
+        if usuario_db is None:
+            return jsonify({'mensaje': 'Usuario no encontrado o inactivo', 'exito': False}), 404
+
+        # Validación con Hash SHA1
+        clave_hash = hashlib.sha1(password_input.encode('utf-8')).hexdigest()
+        if clave_hash == usuario_db[2]:
+            return jsonify({
+                'mensaje': 'Login exitoso',
+                'exito': True,
+                'usuario': {
+                    'idemp': usuario_db[0],
+                    'usuario': usuario_db[1]
+                }
+            }), 200
+        else:
+            return jsonify({'mensaje': 'Contraseña incorrecta', 'exito': False}), 401
+
+    except Exception as ex:
+        return jsonify({'mensaje': f'Error en el servidor: {str(ex)}', 'exito': False}), 500
