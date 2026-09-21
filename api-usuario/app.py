@@ -12,9 +12,9 @@ CORS(app, resources={
     }
 })
 
-app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_HOST'] = 'mysql.railway.internal'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'conifera10'
+app.config['MYSQL_PASSWORD'] = 'oWmOBAhHxEIgUWBxuYzIIeTTzsZuTYGb'
 app.config['MYSQL_DB'] = 'ventas'
 
 db = ConexionDB(
